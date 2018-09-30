@@ -1,0 +1,64 @@
+from sys import stdin
+
+
+def solve(L):
+    stackPar,stackOp, stackNum,i,first = [], [], [],0,True
+    ans = 0
+    while(i < len(L)):
+        if(L[i] == '('):
+            first = True
+            #print(L[i])
+            stackPar.append(L[i])
+        elif(L[i] == '+' or L[i] == '-' or L[i] == '*' or L[i] == '/' ):
+            #print(L[i])
+            stackOp.append(L[i])
+        elif(L[i] == ')'):
+                #print(stackNum, stackOp)
+            #if(True)
+                op, num1, num2 = stackOp.pop(),stackNum.pop() ,stackNum.pop()
+                if(op == '+'):
+                    ans+= num2 + num1
+                elif(op == '-'):
+                    ans+= num2 - num1
+                elif(op == '/'):
+                    ans+= num2 / num1
+                elif(op == '*'):
+                    ans+= num2 * num1
+                first = False
+                stackNum.append(ans)
+                
+                ans = 0
+            #else
+            #    op, num = stackOp.pop(), stackNum.pop()
+            #    if(op == '+')
+            #        ans = num + ans
+            #    elif(op == '-')
+            #        ans = num - ans
+            #    elif(op == '')
+            #        ans = num  ans
+            #    elif(op == '')
+            #        ans = num  ans
+            #print(ans)
+        else:
+            stackNum.append(L[i])
+        i+=1
+    
+    
+    return stackNum.pop()
+
+
+def main():
+    cases = int(stdin.readline())
+    
+    while(cases):
+        line = stdin.readline().strip().split()
+        
+        for i in range(len(line)):
+            if(len(line[i]) > 1):
+                line[i] = float(line[i])
+        print("{0:.2f}".format(solve(line)))
+        #print(solve(line))
+        
+        cases-=1
+    
+main()
