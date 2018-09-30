@@ -1,0 +1,93 @@
+from sys import stdin
+
+
+visited = []
+band = True
+
+def function(value, path,pos):
+    global visited, band
+    if(len(path) == 0):
+            visited.append((value,pos))
+            return
+    else:
+        if(path[0] == 'L'):
+            path.pop(0)
+            pos = 2*pos+1
+            function(value,path,pos)
+        else:
+            path.pop(0)
+            pos = 2*pos+2
+            function(value,path,pos)
+
+def solve():
+    global band, visited
+    i=len(visited)-1
+    visited = sorted(visited, key=lambda item: item[1])
+    if(len(visited) > 1 and visited[0][1] == visited[1][1]):
+        band = False
+    else:
+        while(i >= 0 and band):
+            if(visited[i][1] != 0):
+                aux2 = None
+                if(visited[i][1]%2 == 0):
+                    aux2 = (visited[i][1]-2)//2
+                else:
+                    aux2 = (visited[i][1]-1)//2
+                j=i-1
+                band2 = True
+                while(j >= 0 and band and band2):
+                    if(visited[i][1] == visited[j][1]):
+                        band = False
+                        
+                        #print("aqui")
+                    if(visited[j][1] == aux2):
+                        #print("en este")
+                        band2 = False
+                    j-=1
+                if(band2):
+                    band = False
+                    
+            i-=1
+    #print(visited)
+    if(band):
+        first = True
+        
+        for i in range(len(visited)):
+            if(first):
+                print(visited[i][0], end = "")
+                first = False
+            else:
+                print("",visited[i][0], end="")
+    else:
+        print("not complete")
+    if(band):
+        print()
+    return
+def main():
+    global visited, band
+    string = stdin.readline().strip()
+    while(len(string)):
+        #print(string)
+        i=0
+        ans,listPos = 0,[]
+        while(i < len(string)):
+            if(ord('0') <= ord(string[i]) and  ord(string[i]) <= ord('9')):
+                while(ord('0') <= ord(string[i]) and  ord(string[i]) <= ord('9')):
+                    ans,i = (ord(string[i])-ord('0'))+(ans*10),i+1    
+            elif('L' == string[i] or 'R' == string[i]):
+                while('L' == string[i] or 'R' == string[i]):
+                    listPos.append(string[i])
+                    i+=1
+            elif(i > 0 and ')' == string[i] and '(' != string[i-1]):
+                #print(listPos)
+                function(ans,listPos,0)
+                ans,listPos = 0, []
+                i+=1
+            else:
+                i+=1
+        solve()
+        string = stdin.readline().strip()
+        visited,band = [],True
+        
+
+main()
